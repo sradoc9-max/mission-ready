@@ -1,0 +1,9 @@
+{
+  "name": "Mission Ready v2",
+  "short_name": "Mission Ready",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#111827",
+  "theme_color": "#111827",
+  "icons": []
+}
