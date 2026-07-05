@@ -1,19 +1,17 @@
-Mission Ready Tracker v2
-What changed from v1:
-- Added Starting Strength-style workout mode.
-- Each exercise has set rows with weight, reps, and done checkboxes.
-- Rest timer starts when a set is checked.
-- Previous workout appears above each exercise.
-- Finish Workout saves the session and automatically bumps next weights:
-  upper body +5 lb, lower body +10 lb when all work sets are completed.
-- Profiles: User 1, User 2, User 3.
-- Daily tracking: weight, waist, calories, protein, steps, water, sleep.
-- CSV export and JSON backup/import.
+Mission Ready v2.2
 
-How to use:
-1. Unzip the file.
-2. Open mission_ready_tracker_v2/index.html.
-3. Choose your profile.
-4. Go to Workout, select Week and Workout.
-5. Enter weight/reps and check off each set.
-6. Tap Finish + Progress Weights at the end.
+Changes:
+- Faster daily check-in.
+- Steps field moved to Quick Entry for copying from Apple Watch.
+- Sleep remains split into hours and minutes.
+- Weekly Sunday reminder for waist and weight check-in.
+- Net carbs remains automatic: total carbs - dietary fiber.
+- Apple Health note added: true automatic sync requires native iPhone app, not GitHub Pages.
+- No alcohol tracking.
+
+Upload these files to GitHub and replace old versions:
+index.html
+app.js
+style.css
+manifest.json
+README.txt
