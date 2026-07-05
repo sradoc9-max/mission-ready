@@ -1,14 +1,12 @@
 Mission Ready Tracker v2
-
 What changed from v1:
-- Removed alcohol tracking.
 - Added Starting Strength-style workout mode.
 - Each exercise has set rows with weight, reps, and done checkboxes.
 - Rest timer starts when a set is checked.
 - Previous workout appears above each exercise.
 - Finish Workout saves the session and automatically bumps next weights:
   upper body +5 lb, lower body +10 lb when all work sets are completed.
-- Profiles: Conan, Juan Doan, Stephen Christian.
+- Profiles: User 1, User 2, User 3.
 - Daily tracking: weight, waist, calories, protein, steps, water, sleep.
 - CSV export and JSON backup/import.
 
