@@ -3,19 +3,21 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Mission Ready v2.2</title>
+  <title>Mission Ready v2.5</title>
   <link rel="manifest" href="manifest.json"/>
   <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
 <header>
-  <h1>Mission Ready v2.2</h1>
+  <h1>Mission Ready v2.5</h1>
   <p>Train. Track. Improve.</p>
   <nav>
     <button onclick="showTab('mission')">Mission</button>
     <button onclick="showTab('train')">Train</button>
     <button onclick="showTab('fuel')">Fuel</button>
     <button onclick="showTab('intel')">Intel</button>
+    <button onclick="showTab('library')">Library</button>
+    <button onclick="showTab('pfra')">Air Force PFRA</button>
     <button onclick="showTab('admin')">Admin</button>
   </nav>
 </header>
@@ -101,6 +103,131 @@
     <h3>Exercise History</h3>
     <label>Exercise <select id="historyExercise" onchange="renderHistory()"></select></label>
     <div id="history"></div>
+  </section>
+
+
+  <section id="library" class="tab card hidden">
+    <h2>Exercise Library</h2>
+    <p class="hint">Built-in exercise reference so you do not have to jump between Google Images and the app.</p>
+    <label>Exercise <select id="librarySelect" onchange="renderLibrary()"></select></label>
+    <div id="libraryCard"></div>
+  </section>
+
+
+  <section id="pfra" class="tab card hidden">
+    <h2>United States Air Force PFRA</h2>
+    <p class="hint">
+      Practice calculator based on the final USAF PFRA scoring charts effective 1 March 2026.
+      Official testing under the new standards began 1 July 2026.
+    </p>
+
+    <div class="notice">
+      <strong>Current scored categories:</strong>
+      Cardiorespiratory 50 points, Waist-to-Height Ratio 20 points,
+      muscular strength 15 points, and core endurance 15 points.
+    </div>
+
+    <h3>Practice Assessment</h3>
+    <div class="grid">
+      <label>Assessment Date <input id="pfraDate" type="date"></label>
+      <label>Age
+        <input id="pfraAge" type="number" min="17" max="100" value="44" oninput="calculatePFRA()">
+      </label>
+      <label>Sex
+        <select id="pfraSex" onchange="calculatePFRA()">
+          <option value="M">Male</option>
+          <option value="F">Female</option>
+        </select>
+      </label>
+      <label>Height (inches)
+        <input id="pfraHeight" type="number" step="0.1" value="70" oninput="calculatePFRA()">
+      </label>
+      <label>Waist (inches)
+        <input id="pfraWaist" type="number" step="0.1" value="43" oninput="calculatePFRA()">
+      </label>
+    </div>
+
+    <div class="pfra-component">
+      <h4>Cardiorespiratory - 50 points</h4>
+      <div class="grid">
+        <label>Event
+          <select id="pfraCardioEvent" onchange="renderPFRAInputs(); calculatePFRA()">
+            <option value="run2">2-Mile Run</option>
+            <option value="hamr">20-Meter HAMR</option>
+          </select>
+        </label>
+        <label id="pfraRunWrap">2-Mile Time (min:sec)
+          <input id="pfraRunTime" type="text" inputmode="numeric" placeholder="18:00" oninput="calculatePFRA()">
+        </label>
+        <label id="pfraHamrWrap" class="hidden">HAMR Shuttles
+          <input id="pfraHamr" type="number" min="0" placeholder="50" oninput="calculatePFRA()">
+        </label>
+      </div>
+    </div>
+
+    <div class="pfra-component">
+      <h4>Muscular Strength - 15 points</h4>
+      <div class="grid">
+        <label>Event
+          <select id="pfraStrengthEvent" onchange="calculatePFRA()">
+            <option value="pushups">1-Minute Push-Ups</option>
+            <option value="hrpu">2-Minute Hand-Release Push-Ups</option>
+          </select>
+        </label>
+        <label>Repetitions
+          <input id="pfraStrengthReps" type="number" min="0" placeholder="40" oninput="calculatePFRA()">
+        </label>
+      </div>
+    </div>
+
+    <div class="pfra-component">
+      <h4>Core Endurance - 15 points</h4>
+      <div class="grid">
+        <label>Event
+          <select id="pfraCoreEvent" onchange="renderPFRAInputs(); calculatePFRA()">
+            <option value="situps">1-Minute Sit-Ups</option>
+            <option value="clrc">2-Minute Cross-Leg Reverse Crunch</option>
+            <option value="plank">Forearm Plank</option>
+          </select>
+        </label>
+        <label id="pfraCoreRepsWrap">Repetitions
+          <input id="pfraCoreReps" type="number" min="0" placeholder="40" oninput="calculatePFRA()">
+        </label>
+        <label id="pfraPlankWrap" class="hidden">Plank Time (min:sec)
+          <input id="pfraPlankTime" type="text" inputmode="numeric" placeholder="2:00" oninput="calculatePFRA()">
+        </label>
+      </div>
+    </div>
+
+    <div id="pfraResults" class="pfra-results"></div>
+    <button onclick="calculatePFRA()">Calculate Score</button>
+    <button onclick="savePFRA()">Save Practice Assessment</button>
+
+    <h3>Practice Test Timers</h3>
+    <div class="practice-panel">
+      <label>Timer
+        <select id="practiceTimerType">
+          <option value="60">1-Minute Event</option>
+          <option value="120">2-Minute Event</option>
+          <option value="300">5-Minute Rest</option>
+          <option value="600">10-Minute Rest</option>
+        </select>
+      </label>
+      <div class="practice-clock" id="practiceClock">00:00</div>
+      <button onclick="startPracticeTimer()">Start</button>
+      <button onclick="pausePracticeTimer()">Pause</button>
+      <button onclick="resetPracticeTimer()">Reset</button>
+    </div>
+
+    <h3>PFRA History</h3>
+    <div id="pfraHistory"></div>
+
+    <h3>Reference</h3>
+    <div class="notice">
+      <p><strong>Waist-to-Height Ratio:</strong> waist divided by height using the same unit.</p>
+      <p><strong>2 km walk:</strong> available only when authorized under applicable medical/administrative guidance; it is not included in this general four-component calculator.</p>
+      <p><strong>Important:</strong> this is a practice tool. Official scores and test administration remain governed by current DAF guidance, AFPC charts, and the administering Fitness Assessment Cell.</p>
+    </div>
   </section>
 
   <section id="admin" class="tab card hidden">
