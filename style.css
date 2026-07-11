@@ -2,8 +2,6 @@
 .exercise-help{background:#fff;border:1px solid #d1d5db;border-radius:12px;padding:1rem;margin:.75rem 0}
 .exercise-help h3{margin-top:.25rem}
 .help-btn{background:#059669}
-.diagram{background:#eef2ff;border-radius:10px;margin:.5rem 0;padding:.5rem;text-align:center}
-.diagram svg{width:100%;max-width:430px;height:auto}
 .cue-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:.75rem}
 .cue-box{background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:.75rem}
 .cue-box h4{margin:.25rem 0}
@@ -19,3 +17,10 @@
 .practice-panel{background:#f9fafb;border:1px solid #d1d5db;border-radius:10px;padding:1rem}
 .practice-clock{font-size:3rem;font-weight:900;text-align:center;background:#111827;color:white;border-radius:10px;padding:1rem;margin:.75rem 0}
 .history-row{background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:.75rem;margin:.5rem 0}
+
+.modal{position:fixed;inset:0;background:rgba(17,24,39,.84);display:flex;align-items:center;justify-content:center;padding:1rem;z-index:9999}
+.modal.hidden{display:none}
+.modal-card{width:min(520px,100%);background:white;border-radius:14px;padding:1.25rem;box-shadow:0 20px 60px rgba(0,0,0,.35)}
+.modal-card h2{margin-top:0}
+.username{color:#4b5563;font-size:.9rem}
+.exercise-help .pill{margin-bottom:.6rem}

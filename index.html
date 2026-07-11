@@ -8,6 +8,19 @@
   <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
+
+<div id="firstRunModal" class="modal hidden">
+  <div class="modal-card">
+    <h2>Welcome to Mission Ready</h2>
+    <p>Your username becomes the default display name. You can change the display name later.</p>
+    <label>Username <input id="setupUsername" type="text" autocomplete="username" placeholder="Example: Doc"></label>
+    <label>Starting Weight (optional) <input id="setupWeight" type="number" step="0.1" placeholder="244"></label>
+    <label>Starting Waist (optional) <input id="setupWaist" type="number" step="0.1" placeholder="43"></label>
+    <label>Goal Waist <input id="setupGoalWaist" type="number" step="0.1" value="34"></label>
+    <button onclick="completeFirstRun()">Create Profile</button>
+  </div>
+</div>
+
 <header>
   <h1>Mission Ready v2.5</h1>
   <p>Train. Track. Improve.</p>
@@ -108,7 +121,7 @@
 
   <section id="library" class="tab card hidden">
     <h2>Exercise Library</h2>
-    <p class="hint">Built-in exercise reference so you do not have to jump between Google Images and the app.</p>
+    <p class="hint">Built-in setup, coaching cues, common mistakes, and substitutions. The crude stick-figure diagrams were removed.</p>
     <label>Exercise <select id="librarySelect" onchange="renderLibrary()"></select></label>
     <div id="libraryCard"></div>
   </section>
@@ -237,10 +250,21 @@
       <strong>Privacy:</strong> weight, waist, calories, sleep, notes, and photos should remain private by default. Future team mode should share workout completion only unless each user chooses otherwise.
     </div>
 
+
+    <h3>Current Profile</h3>
+    <div class="grid">
+      <label>Username <input id="editUsername" type="text" placeholder="Username"></label>
+      <label>Display Name <input id="editDisplayName" type="text" placeholder="Display name"></label>
+      <label>Starting Weight <input id="editStartWeight" type="number" step="0.1"></label>
+      <label>Starting Waist <input id="editStartWaist" type="number" step="0.1"></label>
+      <label>Goal Waist <input id="editGoalWaist" type="number" step="0.1"></label>
+    </div>
+    <button onclick="saveCurrentProfile()">Save Current Profile</button>
+
     <h3>Profiles</h3>
     <div id="profileList"></div>
     <div class="grid">
-      <label>Name <input id="newName" placeholder="Training partner"></label>
+      <label>Username <input id="newName" placeholder="Training partner username"></label>
       <label>Start Weight <input id="newStartWeight" type="number" step="0.1"></label>
       <label>Start Waist <input id="newStartWaist" type="number" step="0.1"></label>
       <label>Goal Waist <input id="newGoalWaist" type="number" step="0.1" value="34"></label>

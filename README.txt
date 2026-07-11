@@ -1,27 +1,23 @@
-Mission Ready v2.5
+Mission Ready v2.5 — Fixed Consolidated Build
 
-New:
-- United States Air Force PFRA practice tab.
-- Official USAF PFRA scoring tables effective 1 March 2026.
-- 2-mile run and 20-meter HAMR.
-- Waist-to-height ratio.
-- 1-minute push-ups and 2-minute hand-release push-ups.
-- 1-minute sit-ups, 2-minute cross-leg reverse crunches, and forearm plank.
-- Age- and sex-specific scoring.
-- Composite score, category, and component minimum check.
-- Practice timers.
-- Saved PFRA history.
-- Exercise diagrams and existing workout/nutrition features retained.
+Included:
+- Workout tracker, set/repetition checkboxes, rest timer, history, and progression.
+- Nutrition tracking with calories, protein, total carbs, dietary fiber, automatic net carbs, fat, water, steps, and sleep hours/minutes.
+- Air Force PFRA practice calculator, timers, and saved PFRA history.
+- Customizable usernames and display names.
+- Username becomes the default display name at first launch.
+- Existing local browser data is migrated where possible.
+- Exercise setup instructions, cues, common mistakes, and substitutions.
+- The crude stick-figure diagrams were removed.
 
-Upload/replace these files in GitHub:
+Upload these five files to the GitHub repository root:
 index.html
 app.js
 style.css
 manifest.json
 README.txt
 
-Official source used:
-AFPC Final USAF Physical Fitness Readiness Assessment Scoring Charts, effective 1 Mar 2026.
+This remains version 2.5.
 
 Important:
-This is a practice calculator. Official scoring and administration remain governed by current DAF guidance and the administering Fitness Assessment Cell.
+The PFRA module is a practice tool. Official scoring and administration remain governed by current Department of the Air Force guidance and the administering Fitness Assessment Cell.
