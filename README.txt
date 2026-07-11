@@ -1,23 +1,28 @@
-Mission Ready v2.5 — Fixed Consolidated Build
+Mission Ready v2.6
 
-Included:
-- Workout tracker, set/repetition checkboxes, rest timer, history, and progression.
-- Nutrition tracking with calories, protein, total carbs, dietary fiber, automatic net carbs, fat, water, steps, and sleep hours/minutes.
-- Air Force PFRA practice calculator, timers, and saved PFRA history.
-- Customizable usernames and display names.
-- Username becomes the default display name at first launch.
-- Existing local browser data is migrated where possible.
-- Exercise setup instructions, cues, common mistakes, and substitutions.
-- The crude stick-figure diagrams were removed.
+Major changes:
+- Two-panel START / END visual reference for every exercise in the 12-week program.
+- Save & Continue Later stores a workout as a draft.
+- Finish Workout marks it complete.
+- Automatic weight increases removed. All weights remain under user control.
+- Exercise-level RPE and notes added.
+- Previous workout history retained.
+- Profiles include Conan, Juan, Stephen, Q, and Username.
+- Nutrition, sleep, steps, net carbs, PFRA calculator, timers, and history retained.
+- GitHub Pages compatible and offline-friendly.
 
-Upload these five files to the GitHub repository root:
+Upload these files to the GitHub repository root:
 index.html
 app.js
 style.css
 manifest.json
 README.txt
 
-This remains version 2.5.
+After upload:
+1. Commit directly to main.
+2. Wait for GitHub Pages deployment.
+3. Open the site and refresh.
+4. Remove and re-add the Home Screen icon if iPhone still shows an older cached version.
 
-Important:
-The PFRA module is a practice tool. Official scoring and administration remain governed by current Department of the Air Force guidance and the administering Fitness Assessment Cell.
+Note:
+The exercise visuals are built into the app as lightweight SVG references so the site does not depend on external image hosting.

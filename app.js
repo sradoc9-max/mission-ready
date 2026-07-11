@@ -1,4 +1,4 @@
-const defaultData={activeProfileId:"",profiles:[],setupComplete:false,targets:{calories:2300,protein:200,fiber:30,netCarbs:150,water:100,sleep:7},daily:[],workouts:[],missions:{},trainingMaxes:{},pfraHistory:[]};
+const defaultData={activeProfileId:"conan",profiles:[{id:"conan",name:"Conan",startWeight:244,startWaist:43,goalWaist:34},{id:"juan",name:"Juan Doan",startWeight:null,startWaist:null,goalWaist:null},{id:"stephen",name:"Stephen Christian",startWeight:null,startWaist:null,goalWaist:null},{id:"q",name:"Q",startWeight:null,startWaist:null,goalWaist:null},{id:"username",name:"Username",startWeight:null,startWaist:null,goalWaist:null}],targets:{calories:2300,protein:200,fiber:30,netCarbs:150,water:100,sleep:7},daily:[],workouts:[],missions:{},trainingMaxes:{},pfraHistory:[]};
 const templates={"Upper A":[{name:"Bench Press",type:"upper",rest:120,sets:[["Warm-up",95,8],["Warm-up",135,5],["1",185,8],["2",185,8],["3",185,8],["4",185,8]]},{name:"Lat Pulldown",type:"upper",rest:90,sets:[["1",120,10],["2",120,10],["3",120,10],["4",120,10]]},{name:"Incline DB Press",type:"upper",rest:90,sets:[["1",50,10],["2",50,10],["3",50,10]]},{name:"Seated Cable Row",type:"upper",rest:90,sets:[["1",120,10],["2",120,10],["3",120,10]]},{name:"Lateral Raise",type:"upper",rest:60,sets:[["1",20,15],["2",20,15],["3",20,15]]},{name:"Rope Pushdown",type:"upper",rest:60,sets:[["1",50,15],["2",50,15],["3",50,15]]}],"Lower A":[{name:"Squat",type:"lower",rest:180,sets:[["Warm-up",135,5],["Warm-up",185,3],["1",225,6],["2",225,6],["3",225,6],["4",225,6]]},{name:"Romanian Deadlift",type:"lower",rest:120,sets:[["1",185,8],["2",185,8],["3",185,8]]},{name:"Walking Lunge",type:"lower",rest:90,sets:[["1",30,12],["2",30,12],["3",30,12]]},{name:"Leg Curl",type:"lower",rest:75,sets:[["1",90,12],["2",90,12],["3",90,12]]},{name:"Standing Calf Raise",type:"lower",rest:60,sets:[["1",140,15],["2",140,15],["3",140,15],["4",140,15]]},{name:"Plank",type:"core",rest:60,sets:[["1",0,45],["2",0,45],["3",0,45]]}],"Zone 2 Cardio":[{name:"Zone 2 Cardio",type:"cardio",rest:0,sets:[["Minutes",0,45]]}],"Upper B":[{name:"DB Overhead Press",type:"upper",rest:90,sets:[["1",35,10],["2",35,10],["3",35,10]]},{name:"Chest Supported Row",type:"upper",rest:90,sets:[["1",90,10],["2",90,10],["3",90,10],["4",90,10]]},{name:"Machine Chest Press",type:"upper",rest:90,sets:[["1",120,12],["2",120,12],["3",120,12]]},{name:"Cable Fly",type:"upper",rest:60,sets:[["1",30,15],["2",30,15],["3",30,15]]},{name:"Hammer Curl",type:"upper",rest:60,sets:[["1",30,12],["2",30,12],["3",30,12]]},{name:"Face Pull",type:"upper",rest:60,sets:[["1",50,15],["2",50,15],["3",50,15]]}],"Lower B + Conditioning":[{name:"Trap Bar Deadlift",type:"lower",rest:180,sets:[["Warm-up",135,5],["Warm-up",225,3],["1",275,5],["2",275,5],["3",275,5],["4",275,5]]},{name:"Leg Press",type:"lower",rest:90,sets:[["1",270,12],["2",270,12],["3",270,12]]},{name:"Goblet Squat",type:"lower",rest:90,sets:[["1",60,15],["2",60,15],["3",60,15]]},{name:"Leg Extension",type:"lower",rest:75,sets:[["1",100,15],["2",100,15],["3",100,15]]},{name:"Hanging Knee Raise",type:"core",rest:60,sets:[["1",0,15],["2",0,15],["3",0,15]]},{name:"Incline Treadmill",type:"cardio",rest:0,sets:[["Minutes",0,10]]}]};
 
 const exerciseInfo={
@@ -28,10 +28,97 @@ const exerciseInfo={
 "Hanging Knee Raise":{d:"Knee Raise",m:"Abs, hip flexors",setup:["Hang or use captain chair","Ribs down"],cues:["Raise knees","Curl pelvis slightly","Lower slowly"],avoid:["Swinging","Arching back"],sub:"Reverse crunch."},
 "Incline Treadmill":{d:"Cardio",m:"Conditioning",setup:["Set incline","Walk tall","Hands off rails if safe"],cues:["Brisk sustainable pace","Breathe steady"],avoid:["Hanging on rails","Too fast too soon"],sub:"Bike or rower."}
 };
-function diagram(label){return ""}
+function diagram(label){
+ return `<svg viewBox="0 0 420 160"><rect width="420" height="160" rx="12" fill="#eef2ff"/>
+ <circle cx="90" cy="55" r="18" fill="#111827"/><line x1="90" y1="75" x2="90" y2="115" stroke="#111827" stroke-width="10" stroke-linecap="round"/>
+ <line x1="90" y1="88" x2="145" y2="70" stroke="#111827" stroke-width="8" stroke-linecap="round"/>
+ <line x1="90" y1="115" x2="65" y2="145" stroke="#111827" stroke-width="8" stroke-linecap="round"/>
+ <line x1="90" y1="115" x2="125" y2="145" stroke="#111827" stroke-width="8" stroke-linecap="round"/>
+ <path d="M170 75 C230 35 280 35 340 75" stroke="#2563eb" stroke-width="8" fill="none" stroke-linecap="round"/>
+ <polygon points="340,75 322,62 322,88" fill="#2563eb"/>
+ <text x="170" y="120" font-size="28" font-weight="700" fill="#111827">${label}</text></svg>`;
+}
+
+const exercisePoseMap={
+"Bench Press":["press_start","press_end"],"Incline DB Press":["press_start","press_end"],"Machine Chest Press":["press_start","press_end"],
+"Lat Pulldown":["pulldown_start","pulldown_end"],"Seated Cable Row":["row_start","row_end"],"Chest Supported Row":["chestrow_start","chestrow_end"],
+"Lateral Raise":["raise_start","raise_end"],"Rope Pushdown":["pushdown_start","pushdown_end"],"Face Pull":["facepull_start","facepull_end"],
+"Squat":["squat_start","squat_end"],"Goblet Squat":["squat_start","squat_end"],"Romanian Deadlift":["rdl_start","rdl_end"],
+"Trap Bar Deadlift":["deadlift_start","deadlift_end"],"Walking Lunge":["lunge_start","lunge_end"],"Leg Curl":["legcurl_start","legcurl_end"],
+"Standing Calf Raise":["calf_start","calf_end"],"Plank":["plank_start","plank_end"],"Zone 2 Cardio":["cardio_start","cardio_end"],
+"DB Overhead Press":["ohp_start","ohp_end"],"Cable Fly":["fly_start","fly_end"],"Hammer Curl":["curl_start","curl_end"],
+"Leg Press":["legpress_start","legpress_end"],"Leg Extension":["legext_start","legext_end"],"Hanging Knee Raise":["knee_start","knee_end"],
+"Incline Treadmill":["cardio_start","cardio_end"]
+};
+
+function athleteSvg(pose,name){
+  const skin="#d99b72", hair="#d6a15e", outfit="#111827", line="#374151", metal="#9ca3af", accent="#2563eb";
+  const head=`<circle cx="145" cy="60" r="18" fill="${skin}"/><path d="M130 53 Q145 35 160 51 Q151 40 143 40 Q132 40 130 53" fill="${hair}"/><circle cx="163" cy="49" r="9" fill="${hair}"/>`;
+  const torso=`<path d="M130 80 Q145 73 160 80 L165 132 Q145 145 125 132 Z" fill="${outfit}"/><path d="M130 82 Q145 74 160 82 L158 102 Q145 108 132 102 Z" fill="#ffffff"/>`;
+  const legs=`<path d="M132 132 L128 205" stroke="${skin}" stroke-width="14" stroke-linecap="round"/><path d="M158 132 L162 205" stroke="${skin}" stroke-width="14" stroke-linecap="round"/><path d="M118 206 L137 206" stroke="#ffffff" stroke-width="9" stroke-linecap="round"/><path d="M153 206 L172 206" stroke="#ffffff" stroke-width="9" stroke-linecap="round"/>`;
+  const body=head+torso+legs;
+  const machine=`<rect x="22" y="24" width="10" height="195" rx="4" fill="${metal}"/><rect x="22" y="24" width="82" height="10" rx="4" fill="${metal}"/><circle cx="100" cy="34" r="8" fill="#6b7280"/>`;
+  const label=`<text x="110" y="232" text-anchor="middle" font-size="12" font-weight="700" fill="${line}">${name}</text>`;
+  let extra="", arms="";
+  const arm=(x1,y1,x2,y2)=>`<path d="M${x1} ${y1} L${x2} ${y2}" stroke="${skin}" stroke-width="10" stroke-linecap="round"/>`;
+  switch(pose){
+    case "press_start": arms=arm(132,92,105,112)+arm(158,92,185,112); extra=`<rect x="75" y="108" width="140" height="8" rx="4" fill="${line}"/>`; break;
+    case "press_end": arms=arm(132,92,112,65)+arm(158,92,178,65); extra=`<rect x="105" y="58" width="80" height="8" rx="4" fill="${line}"/>`; break;
+    case "pulldown_start": arms=arm(132,92,108,50)+arm(158,92,182,50); extra=machine+`<line x1="100" y1="34" x2="145" y2="48" stroke="${line}" stroke-width="3"/>`; break;
+    case "pulldown_end": arms=arm(132,92,112,100)+arm(158,92,178,100); extra=machine+`<line x1="100" y1="34" x2="145" y2="98" stroke="${line}" stroke-width="3"/>`; break;
+    case "row_start": arms=arm(132,92,92,110)+arm(158,92,198,110); extra=`<line x1="50" y1="110" x2="92" y2="110" stroke="${line}" stroke-width="4"/><line x1="198" y1="110" x2="240" y2="110" stroke="${line}" stroke-width="4"/>`; break;
+    case "row_end": arms=arm(132,92,112,102)+arm(158,92,178,102); extra=`<line x1="50" y1="110" x2="112" y2="102" stroke="${line}" stroke-width="4"/><line x1="178" y1="102" x2="240" y2="110" stroke="${line}" stroke-width="4"/>`; break;
+    case "chestrow_start": arms=arm(132,92,118,138)+arm(158,92,172,138); extra=`<path d="M110 110 L180 110 L165 145 L125 145 Z" fill="${metal}"/><circle cx="115" cy="142" r="8" fill="${line}"/><circle cx="175" cy="142" r="8" fill="${line}"/>`; break;
+    case "chestrow_end": arms=arm(132,92,112,104)+arm(158,92,178,104); extra=`<path d="M110 110 L180 110 L165 145 L125 145 Z" fill="${metal}"/><circle cx="105" cy="103" r="8" fill="${line}"/><circle cx="185" cy="103" r="8" fill="${line}"/>`; break;
+    case "raise_start": arms=arm(132,92,126,132)+arm(158,92,164,132); extra=`<circle cx="124" cy="137" r="7" fill="${line}"/><circle cx="166" cy="137" r="7" fill="${line}"/>`; break;
+    case "raise_end": arms=arm(132,92,88,94)+arm(158,92,202,94); extra=`<circle cx="82" cy="94" r="7" fill="${line}"/><circle cx="208" cy="94" r="7" fill="${line}"/>`; break;
+    case "pushdown_start": arms=arm(132,92,122,112)+arm(158,92,168,112); extra=machine+`<line x1="100" y1="34" x2="145" y2="110" stroke="${line}" stroke-width="3"/><path d="M145 110 L126 130 M145 110 L164 130" stroke="${line}" stroke-width="5" stroke-linecap="round"/>`; break;
+    case "pushdown_end": arms=arm(132,92,126,142)+arm(158,92,164,142); extra=machine+`<line x1="100" y1="34" x2="145" y2="126" stroke="${line}" stroke-width="3"/><path d="M145 126 L124 149 M145 126 L166 149" stroke="${line}" stroke-width="5" stroke-linecap="round"/>`; break;
+    case "facepull_start": arms=arm(132,92,104,72)+arm(158,92,186,72); extra=machine+`<line x1="100" y1="34" x2="145" y2="72" stroke="${line}" stroke-width="3"/>`; break;
+    case "facepull_end": arms=arm(132,92,116,62)+arm(158,92,174,62); extra=machine+`<line x1="100" y1="34" x2="145" y2="62" stroke="${line}" stroke-width="3"/>`; break;
+    case "squat_start": arms=arm(132,92,112,102)+arm(158,92,178,102); extra=`<rect x="92" y="92" width="106" height="7" rx="3" fill="${line}"/>`; break;
+    case "squat_end": arms=arm(132,92,112,102)+arm(158,92,178,102); extra=`<rect x="92" y="92" width="106" height="7" rx="3" fill="${line}"/><path d="M132 132 L112 165" stroke="${skin}" stroke-width="14"/><path d="M158 132 L178 165" stroke="${skin}" stroke-width="14"/>`; break;
+    case "rdl_start": arms=arm(132,92,130,140)+arm(158,92,160,140); extra=`<rect x="95" y="141" width="100" height="7" rx="3" fill="${line}"/>`; break;
+    case "rdl_end": arms=arm(132,92,112,135)+arm(158,92,178,135); extra=`<rect x="92" y="136" width="106" height="7" rx="3" fill="${line}"/><path d="M125 80 Q145 96 165 108" stroke="${skin}" stroke-width="16" fill="none"/>`; break;
+    case "deadlift_start": arms=arm(132,92,126,152)+arm(158,92,164,152); extra=`<rect x="95" y="154" width="100" height="7" rx="3" fill="${line}"/>`; break;
+    case "deadlift_end": arms=arm(132,92,130,140)+arm(158,92,160,140); extra=`<rect x="95" y="141" width="100" height="7" rx="3" fill="${line}"/>`; break;
+    case "lunge_start": arms=arm(132,92,126,132)+arm(158,92,164,132); extra=`<path d="M132 132 L110 188" stroke="${skin}" stroke-width="14"/><path d="M158 132 L188 172" stroke="${skin}" stroke-width="14"/>`; break;
+    case "lunge_end": arms=arm(132,92,126,132)+arm(158,92,164,132); extra=`<path d="M132 132 L92 168" stroke="${skin}" stroke-width="14"/><path d="M158 132 L190 160" stroke="${skin}" stroke-width="14"/>`; break;
+    case "legcurl_start": extra=`<rect x="90" y="122" width="115" height="12" rx="6" fill="${metal}"/>`; arms=arm(132,92,118,120)+arm(158,92,172,120); break;
+    case "legcurl_end": extra=`<rect x="90" y="122" width="115" height="12" rx="6" fill="${metal}"/><path d="M158 132 L188 164" stroke="${skin}" stroke-width="14"/>`; arms=arm(132,92,118,120)+arm(158,92,172,120); break;
+    case "calf_start": arms=arm(132,92,128,120)+arm(158,92,162,120); extra=`<rect x="105" y="208" width="80" height="6" fill="${metal}"/>`; break;
+    case "calf_end": arms=arm(132,92,128,120)+arm(158,92,162,120); extra=`<rect x="105" y="198" width="80" height="6" fill="${metal}"/>`; break;
+    case "plank_start": extra=`<path d="M85 120 L205 145" stroke="${outfit}" stroke-width="22" stroke-linecap="round"/><circle cx="72" cy="117" r="16" fill="${skin}"/><path d="M105 130 L85 166" stroke="${skin}" stroke-width="12"/><path d="M185 142 L215 172" stroke="${skin}" stroke-width="12"/>`; return `<svg viewBox="0 0 290 245">${extra}${label}</svg>`;
+    case "plank_end": extra=`<path d="M85 120 L205 145" stroke="${outfit}" stroke-width="22" stroke-linecap="round"/><circle cx="72" cy="117" r="16" fill="${skin}"/><path d="M105 130 L85 166" stroke="${skin}" stroke-width="12"/><path d="M185 142 L215 172" stroke="${skin}" stroke-width="12"/>`; return `<svg viewBox="0 0 290 245">${extra}${label}</svg>`;
+    case "cardio_start": extra=`<rect x="70" y="200" width="150" height="8" rx="4" fill="${metal}"/>`; arms=arm(132,92,124,120)+arm(158,92,166,120); break;
+    case "cardio_end": extra=`<rect x="70" y="200" width="150" height="8" rx="4" fill="${metal}"/><path d="M132 132 L105 185" stroke="${skin}" stroke-width="14"/><path d="M158 132 L190 180" stroke="${skin}" stroke-width="14"/>`; arms=arm(132,92,120,112)+arm(158,92,170,112); break;
+    case "ohp_start": arms=arm(132,92,118,82)+arm(158,92,172,82); extra=`<circle cx="112" cy="78" r="7" fill="${line}"/><circle cx="178" cy="78" r="7" fill="${line}"/>`; break;
+    case "ohp_end": arms=arm(132,92,128,48)+arm(158,92,162,48); extra=`<circle cx="126" cy="42" r="7" fill="${line}"/><circle cx="164" cy="42" r="7" fill="${line}"/>`; break;
+    case "fly_start": arms=arm(132,92,82,98)+arm(158,92,208,98); extra=`<line x1="22" y1="34" x2="82" y2="98" stroke="${line}" stroke-width="3"/><line x1="268" y1="34" x2="208" y2="98" stroke="${line}" stroke-width="3"/>`; break;
+    case "fly_end": arms=arm(132,92,142,105)+arm(158,92,148,105); extra=`<line x1="22" y1="34" x2="142" y2="105" stroke="${line}" stroke-width="3"/><line x1="268" y1="34" x2="148" y2="105" stroke="${line}" stroke-width="3"/>`; break;
+    case "curl_start": arms=arm(132,92,126,132)+arm(158,92,164,132); extra=`<circle cx="124" cy="138" r="7" fill="${line}"/><circle cx="166" cy="138" r="7" fill="${line}"/>`; break;
+    case "curl_end": arms=arm(132,92,120,104)+arm(158,92,170,104); extra=`<circle cx="116" cy="100" r="7" fill="${line}"/><circle cx="174" cy="100" r="7" fill="${line}"/>`; break;
+    case "legpress_start": extra=`<rect x="85" y="125" width="120" height="15" fill="${metal}"/><rect x="195" y="75" width="12" height="95" fill="${metal}"/>`; arms=arm(132,92,118,120)+arm(158,92,172,120); break;
+    case "legpress_end": extra=`<rect x="85" y="125" width="120" height="15" fill="${metal}"/><rect x="220" y="75" width="12" height="95" fill="${metal}"/>`; arms=arm(132,92,118,120)+arm(158,92,172,120); break;
+    case "legext_start": extra=`<rect x="95" y="118" width="100" height="12" fill="${metal}"/>`; arms=arm(132,92,118,118)+arm(158,92,172,118); break;
+    case "legext_end": extra=`<rect x="95" y="118" width="100" height="12" fill="${metal}"/><path d="M132 132 L92 132" stroke="${skin}" stroke-width="14"/><path d="M158 132 L198 132" stroke="${skin}" stroke-width="14"/>`; arms=arm(132,92,118,118)+arm(158,92,172,118); break;
+    case "knee_start": extra=`<rect x="72" y="30" width="146" height="8" rx="4" fill="${line}"/>`; arms=arm(132,92,126,40)+arm(158,92,164,40); break;
+    case "knee_end": extra=`<rect x="72" y="30" width="146" height="8" rx="4" fill="${line}"/><path d="M132 132 L118 115" stroke="${skin}" stroke-width="14"/><path d="M158 132 L172 115" stroke="${skin}" stroke-width="14"/>`; arms=arm(132,92,126,40)+arm(158,92,164,40); break;
+    default: arms=arm(132,92,126,130)+arm(158,92,164,130);
+  }
+  return `<svg viewBox="0 0 290 245">${extra}${body}${arms}${label}</svg>`;
+}
+function exerciseVisualHtml(name){
+  const poses=exercisePoseMap[name]||["raise_start","raise_end"];
+  return `<div class="exercise-visual"><div class="exercise-panels">
+    <div class="pose-panel"><div class="pose-label">START</div>${athleteSvg(poses[0],name)}</div>
+    <div class="pose-panel"><div class="pose-label">END</div>${athleteSvg(poses[1],name)}</div>
+  </div><div class="visual-note">Use the panels as a quick position reference. Follow the setup and coaching cues below for full technique.</div></div>`;
+}
+
 function helpHtml(name){
  let x=exerciseInfo[name]||{d:"Exercise",m:"",setup:["Set up safely"],cues:["Move with control"],avoid:["Do not rush"],sub:"Use similar movement if needed."};
- return `<div class="exercise-help" id="help-${safeId(name)}"><h3>${name}</h3><span class="pill">${x.m}</span>
+ return `<div class="exercise-help" id="help-${safeId(name)}"><h3>${name}</h3><span class="pill">${x.m}</span>${exerciseVisualHtml(name)}<div class="diagram">${diagram(x.d)}</div>
  <div class="cue-grid"><div class="cue-box"><h4>Setup</h4><ul>${x.setup.map(i=>`<li>${i}</li>`).join("")}</ul></div>
  <div class="cue-box"><h4>Cues</h4><ul>${x.cues.map(i=>`<li>${i}</li>`).join("")}</ul></div>
  <div class="cue-box"><h4>Avoid</h4><ul>${x.avoid.map(i=>`<li>${i}</li>`).join("")}</ul></div>
@@ -194,112 +281,10 @@ function startPracticeTimer(){
 function pausePracticeTimer(){clearInterval(practiceInterval)}
 function resetPracticeTimer(){clearInterval(practiceInterval);practiceRemaining=parseInt(document.getElementById("practiceTimerType").value);practiceClockRender()}
 
-function slugifyUsername(value){
-  return String(value||"").trim().toLowerCase().replace(/^@/,"").replace(/[^a-z0-9_-]+/g,"-").replace(/^-+|-+$/g,"");
-}
-function normalizeProfile(p,index=0){
-  const fallback="user"+(index+1);
-  const username=slugifyUsername(p.username||p.name||fallback)||fallback;
-  const displayName=(p.displayName||p.name||p.username||username).trim();
-  return {...p,username,displayName,name:displayName};
-}
-function migrateLegacyData(){
-  const keys=["missionReadyV25","missionReadyV23","missionReadyV22","missionReadyV21","missionReadyV2","missionReadyData"];
-  for(const key of keys){
-    const raw=localStorage.getItem(key);
-    if(!raw)continue;
-    try{
-      const legacy=JSON.parse(raw);
-      if(!legacy.targets)legacy.targets=defaultData.targets;
-      legacy.daily=legacy.daily||[];
-      legacy.workouts=legacy.workouts||[];
-      legacy.missions=legacy.missions||{};
-      legacy.trainingMaxes=legacy.trainingMaxes||{};
-      legacy.pfraHistory=legacy.pfraHistory||[];
-      legacy.profiles=(legacy.profiles||[]).map(normalizeProfile);
-      if(!legacy.activeProfileId&&legacy.profiles.length)legacy.activeProfileId=legacy.profiles[0].id;
-      legacy.setupComplete=legacy.profiles.length>0;
-      localStorage.setItem("missionReadyV25",JSON.stringify(legacy));
-      return legacy;
-    }catch(e){}
-  }
-  return JSON.parse(JSON.stringify(defaultData));
-}
-function data(){
-  const raw=localStorage.getItem("missionReadyV25");
-  return raw?JSON.parse(raw):migrateLegacyData();
-}
-function save(d){localStorage.setItem("missionReadyV25",JSON.stringify(d))}function today(){return new Date().toISOString().split("T")[0]}function prof(){let d=data();return d.profiles.find(p=>p.id===d.activeProfileId)||d.profiles[0]||{id:"",username:"username",displayName:"Username",name:"Username",startWeight:null,startWaist:null,goalWaist:34}}function val(id){return document.getElementById(id).value}function num(id){let n=parseFloat(val(id));return isNaN(n)?0:n}function showTab(id){document.querySelectorAll(".tab").forEach(x=>x.classList.add("hidden"));document.getElementById(id).classList.remove("hidden");if(id==="intel")renderProgress();if(id==="library")renderLibrary();if(id==="pfra"){renderPFRAInputs();calculatePFRA();renderPFRAHistory();}}
-
-function optionalNumber(id){
-  const n=parseFloat(document.getElementById(id)?.value);
-  return isNaN(n)?null:n;
-}
-function completeFirstRun(){
-  const raw=document.getElementById("setupUsername").value.trim();
-  const username=slugifyUsername(raw);
-  if(!username)return alert("Enter a username.");
-  const displayName=raw.replace(/^@/,"")||username;
-  const profile={
-    id:username+"-"+Date.now().toString().slice(-6),
-    username,displayName,name:displayName,
-    startWeight:optionalNumber("setupWeight"),
-    startWaist:optionalNumber("setupWaist"),
-    goalWaist:optionalNumber("setupGoalWaist")||34
-  };
-  const d=data();
-  d.profiles=[profile];
-  d.activeProfileId=profile.id;
-  d.setupComplete=true;
-  save(d);
-  document.getElementById("firstRunModal").classList.add("hidden");
-  renderProfiles();renderMission();loadWorkout();renderProgress();renderPFRAHistory();
-}
-function showFirstRunIfNeeded(){
-  const d=data();
-  const modal=document.getElementById("firstRunModal");
-  if(modal)modal.classList.toggle("hidden",Boolean(d.setupComplete&&d.profiles.length));
-}
-function populateCurrentProfileEditor(){
-  const p=prof();
-  const values={
-    editUsername:p.username||"",
-    editDisplayName:p.displayName||p.name||p.username||"",
-    editStartWeight:p.startWeight??"",
-    editStartWaist:p.startWaist??"",
-    editGoalWaist:p.goalWaist??34
-  };
-  Object.entries(values).forEach(([id,value])=>{const el=document.getElementById(id);if(el)el.value=value});
-}
-function saveCurrentProfile(){
-  const d=data();
-  const p=d.profiles.find(x=>x.id===d.activeProfileId);
-  if(!p)return;
-  const username=slugifyUsername(document.getElementById("editUsername").value);
-  if(!username)return alert("Username is required.");
-  p.username=username;
-  p.displayName=document.getElementById("editDisplayName").value.trim()||username;
-  p.name=p.displayName;
-  p.startWeight=optionalNumber("editStartWeight");
-  p.startWaist=optionalNumber("editStartWaist");
-  p.goalWaist=optionalNumber("editGoalWaist")||34;
-  save(d);renderProfiles();renderMission();renderProgress();alert("Profile saved.");
-}
-
-function init(){let d=data();if(!d.targets)d.targets=defaultData.targets;save(d);document.getElementById("dailyDate").value=today();document.getElementById("workoutDate").value=today();if(document.getElementById("pfraDate"))document.getElementById("pfraDate").value=today();let w=document.getElementById("weekSelect");for(let i=1;i<=12;i++)w.innerHTML+=`<option value="${i}">Week ${i}</option>`;document.getElementById("workoutSelect").innerHTML=Object.keys(templates).map(x=>`<option>${x}</option>`).join("");let exs=[...new Set(Object.values(templates).flat().map(e=>e.name))].sort();document.getElementById("librarySelect").innerHTML=exs.map(x=>`<option>${x}</option>`).join("");renderProfiles();renderTargets();renderMission();loadWorkout();renderProgress();updateNetCarbsPreview();renderLibrary();renderPFRAInputs();calculatePFRA();renderPFRAHistory();showFirstRunIfNeeded()}
-function renderProfiles(){
-  const d=data(),p=prof(),select=document.getElementById("profileSelect");
-  select.innerHTML=d.profiles.map(x=>`<option value="${x.id}">${x.displayName||x.name||x.username}</option>`).join("");
-  if(d.activeProfileId)select.value=d.activeProfileId;
-  document.getElementById("goalChip").innerText=`${p.displayName||p.name||p.username}: ${p.startWaist??"—"}” → ${p.goalWaist??"—"}” waist`;
-  document.getElementById("profileList").innerHTML=d.profiles.length?d.profiles.map(x=>`<div class="stat"><b>${x.displayName||x.name||x.username}</b><div class="username">@${x.username}</div>Start: ${x.startWeight??"—"} lb / ${x.startWaist??"—"}” waist<br>Goal waist: ${x.goalWaist??"—"}”</div>`).join(""):"No profile created yet.";
-  populateCurrentProfileEditor();
-}
-function changeProfile(){
-  const d=data();d.activeProfileId=val("profileSelect");save(d);
-  renderProfiles();renderMission();loadWorkout();renderProgress();renderPFRAHistory();
-}
-function renderTargets(){let t=data().targets;["Calories","Protein","Fiber","NetCarbs","Water","Sleep"].forEach(k=>document.getElementById("target"+k).value=t[k.charAt(0).toLowerCase()+k.slice(1)])}
+function data(){return JSON.parse(localStorage.getItem("missionReadyV26")||JSON.stringify(defaultData))}function save(d){localStorage.setItem("missionReadyV26",JSON.stringify(d))}function today(){return new Date().toISOString().split("T")[0]}function prof(){let d=data();return d.profiles.find(p=>p.id===d.activeProfileId)||d.profiles[0]}function val(id){return document.getElementById(id).value}function num(id){let n=parseFloat(val(id));return isNaN(n)?0:n}function showTab(id){document.querySelectorAll(".tab").forEach(x=>x.classList.add("hidden"));document.getElementById(id).classList.remove("hidden");if(id==="intel")renderProgress();if(id==="library")renderLibrary();if(id==="pfra"){renderPFRAInputs();calculatePFRA();renderPFRAHistory();}}
+function init(){let d=data();if(!d.targets)d.targets=defaultData.targets;save(d);document.getElementById("dailyDate").value=today();document.getElementById("workoutDate").value=today();if(document.getElementById("pfraDate"))document.getElementById("pfraDate").value=today();let w=document.getElementById("weekSelect");for(let i=1;i<=12;i++)w.innerHTML+=`<option value="${i}">Week ${i}</option>`;document.getElementById("workoutSelect").innerHTML=Object.keys(templates).map(x=>`<option>${x}</option>`).join("");let exs=[...new Set(Object.values(templates).flat().map(e=>e.name))].sort();document.getElementById("librarySelect").innerHTML=exs.map(x=>`<option>${x}</option>`).join("");renderProfiles();renderTargets();renderMission();loadWorkout();renderProgress();updateNetCarbsPreview();renderLibrary();renderPFRAInputs();calculatePFRA();renderPFRAHistory()}
+function renderProfiles(){let d=data(),p=prof();document.getElementById("profileSelect").innerHTML=d.profiles.map(x=>`<option value="${x.id}">${x.name}</option>`).join("");document.getElementById("profileSelect").value=d.activeProfileId;document.getElementById("goalChip").innerText=`${p.name}: ${p.startWaist??"—"}” → ${p.goalWaist??"—"}” waist`;document.getElementById("profileList").innerHTML=d.profiles.map(x=>`<div class="stat"><b>${x.name}</b><br>Start: ${x.startWeight??"—"} lb / ${x.startWaist??"—"}” waist<br>Goal waist: ${x.goalWaist??"—"}”</div>`).join("")}
+function changeProfile(){let d=data();d.activeProfileId=val("profileSelect");save(d);renderProfiles();renderMission();loadWorkout();renderProgress()}function renderTargets(){let t=data().targets;["Calories","Protein","Fiber","NetCarbs","Water","Sleep"].forEach(k=>document.getElementById("target"+k).value=t[k.charAt(0).toLowerCase()+k.slice(1)])}
 function saveTargets(){let d=data();d.targets={calories:num("targetCalories"),protein:num("targetProtein"),fiber:num("targetFiber"),netCarbs:num("targetNetCarbs"),water:num("targetWater"),sleep:num("targetSleep")};save(d);renderMission();updateNetCarbsPreview();alert("Targets saved.")}
 function missionKey(){return prof().id+"_"+today()}function renderMission(){let d=data(),p=prof(),m=d.missions[missionKey()]||{},items=["Workout complete","Protein target hit","Calories within target","Steps ≥ 10,000","Water target hit","Sleep target hit"],completed=items.filter((_,i)=>m[i]).length,pct=Math.round(completed/items.length*100);let dow=new Date().getDay();document.getElementById("weeklyReminder").innerHTML=(dow===0)?`<div class="reminder"><b>Sunday Check-In:</b> measure waist and weight today. Same tape location, relaxed at navel.</div>`:"";document.getElementById("missionProgress").innerHTML=`<b>Mission Progress: ${completed}/${items.length} (${pct}%)</b><div class="bar"><div class="barFill" style="width:${pct}%"></div></div>`;document.getElementById("missionList").innerHTML=items.map((x,i)=>`<label class="mission-item"><input type="checkbox" id="m${i}" ${m[i]?"checked":""}> ${x}</label>`).join("");let daily=d.daily.filter(x=>x.profileId===p.id),work=d.workouts.filter(x=>x.profileId===p.id),last=daily[daily.length-1]||{},waistLost=(p.startWaist&&last.waist)?(p.startWaist-parseFloat(last.waist)).toFixed(1):"—",wtLost=(p.startWeight&&last.weight)?(p.startWeight-parseFloat(last.weight)).toFixed(1):"—";document.getElementById("snapshot").innerHTML=`<div class="stat">Latest Weight<div class="big">${last.weight||"—"} lb</div>${wtLost} lb lost</div><div class="stat">Latest Waist<div class="big">${last.waist||"—"}”</div>${waistLost}” lost</div><div class="stat">Steps<div class="big">${last.steps||"—"}</div>from watch/manual</div><div class="stat">Workouts<div class="big">${work.length}</div>logged</div>`}
 function saveMission(){let d=data();d.missions[missionKey()]={};for(let i=0;i<6;i++)d.missions[missionKey()][i]=document.getElementById("m"+i).checked;save(d);renderMission();alert("Mission saved.")}function copyShareLink(){navigator.clipboard?.writeText(location.href.split("#")[0]);alert("Copied: "+location.href.split("#")[0])}
@@ -307,28 +292,33 @@ function updateNetCarbsPreview(){let carbs=num("carbs"),fiber=num("fiber"),net=M
 function sleepDecimal(o){return (parseFloat(o.sleepHours||0)+(parseFloat(o.sleepMinutes||0)/60))}function nutritionScore(e){let t=data().targets,score=0,c=parseFloat(e.calories),p=parseFloat(e.protein),f=parseFloat(e.fiber),n=parseFloat(e.netCarbs),w=parseFloat(e.water),s=e.sleep!==undefined?parseFloat(e.sleep):sleepDecimal(e);if(c>0)score+=c<=t.calories?25:c<=t.calories+200?18:c<=t.calories+400?10:0;if(!isNaN(p))score+=Math.min(25,Math.round(p/t.protein*25));if(!isNaN(f))score+=Math.min(15,Math.round(f/t.fiber*15));if(!isNaN(n))score+=n<=t.netCarbs?10:n<=t.netCarbs+50?5:0;if(!isNaN(w))score+=Math.min(10,Math.round(w/t.water*10));if(!isNaN(s))score+=Math.min(15,Math.round(s/t.sleep*15));return Math.max(0,Math.min(100,score))}
 function adj(w){w=parseInt(w);return w<=4?{upper:0,lower:0}:w<=8?{upper:5,lower:10}:{upper:10,lower:20}}function lastExercise(pid,name){let all=data().workouts.filter(w=>w.profileId===pid).flatMap(w=>w.exercises||[]).filter(e=>e.name===name);return all[all.length-1]}
 function targetSets(ex,week){let a=adj(week),d=data(),key=prof().id+"_"+ex.name,saved=d.trainingMaxes[key];return ex.sets.map(s=>{let [label,wt,reps]=s;if(saved&&label!=="Warm-up"&&ex.type!=="cardio"&&ex.type!=="core")wt=saved;else if(label!=="Warm-up"&&ex.type==="upper")wt+=a.upper;else if(label!=="Warm-up"&&ex.type==="lower")wt+=a.lower;return{label,weight:wt,reps}})}
-function loadWorkout(){let day=val("workoutSelect"),week=val("weekSelect"),list=templates[day];document.getElementById("exerciseNav").innerHTML=list.map((e,i)=>`<button onclick="scrollToExercise(${i})">${i+1}. ${e.name}</button>`).join("");document.getElementById("historyExercise").innerHTML=[...new Set(Object.values(templates).flat().map(e=>e.name))].sort().map(x=>`<option>${x}</option>`).join("");document.getElementById("workoutContainer").innerHTML=list.map((ex,ei)=>{let last=lastExercise(prof().id,ex.name),prev=last?last.sets.map(s=>`${s.weight}x${s.reps}${s.done?" ✓":""}`).join(", "):"No previous data",sets=targetSets(ex,week);return`<div class="exercise-card" id="exercise${ei}" data-name="${ex.name}" data-type="${ex.type}"><div class="exercise-title"><h3>${ex.name}</h3><span>Rest: ${ex.rest||0}s</span></div><button class="help-btn" onclick="toggleHelp(\`${ex.name}\`)">Show / Hide Exercise Help</button>${helpHtml(ex.name).replace(`id="help-${safeId(ex.name)}"`,`id="help-${safeId(ex.name)}" class="exercise-help hidden"`)}<div class="previous"><b>Previous:</b> ${prev}</div><table class="set-table"><thead><tr><th>Set</th><th>Weight</th><th>Reps</th><th>Done</th></tr></thead><tbody>${sets.map((s,si)=>`<tr><td>${s.label}</td><td><input type="number" step="0.5" id="e${ei}s${si}w" value="${s.weight}"></td><td><input type="number" id="e${ei}s${si}r" value="${s.reps}"></td><td><input type="checkbox" id="e${ei}s${si}d" onchange="maybeStartRest(${ex.rest||0})"></td></tr>`).join("")}</tbody></table></div>`}).join("");renderHistory()}
+function loadWorkout(){let day=val("workoutSelect"),week=val("weekSelect"),list=templates[day];document.getElementById("exerciseNav").innerHTML=list.map((e,i)=>`<button onclick="scrollToExercise(${i})">${i+1}. ${e.name}</button>`).join("");document.getElementById("historyExercise").innerHTML=[...new Set(Object.values(templates).flat().map(e=>e.name))].sort().map(x=>`<option>${x}</option>`).join("");document.getElementById("workoutContainer").innerHTML=list.map((ex,ei)=>{let last=lastExercise(prof().id,ex.name),prev=last?last.sets.map(s=>`${s.weight}x${s.reps}${s.done?" ✓":""}`).join(", "):"No previous data",sets=targetSets(ex,week);return`<div class="exercise-card" id="exercise${ei}" data-name="${ex.name}" data-type="${ex.type}"><div class="exercise-title"><h3>${ex.name}</h3><span>Rest: ${ex.rest||0}s</span></div><button class="help-btn" onclick="toggleHelp(\`${ex.name}\`)">Show / Hide Exercise Help</button>${helpHtml(ex.name).replace(`id="help-${safeId(ex.name)}"`,`id="help-${safeId(ex.name)}" class="exercise-help hidden"`)}<div class="previous"><b>Previous:</b> ${prev}</div><div class="exercise-rpe"><label>Exercise RPE (1–10)<input type="number" id="e${ei}rpe" min="1" max="10" step="0.5" placeholder="8"></label><label>Exercise Note<input type="text" id="e${ei}note" placeholder="Shoulder, machine used, substitution..."></label></div><table class="set-table"><thead><tr><th>Set</th><th>Weight</th><th>Reps</th><th>Done</th></tr></thead><tbody>${sets.map((s,si)=>`<tr><td>${s.label}</td><td><input type="number" step="0.5" id="e${ei}s${si}w" value="${s.weight}"></td><td><input type="number" id="e${ei}s${si}r" value="${s.reps}"></td><td><input type="checkbox" id="e${ei}s${si}d" onchange="maybeStartRest(${ex.rest||0})"></td></tr>`).join("")}</tbody></table></div>`}).join("");renderHistory()}
 function scrollToExercise(i){document.getElementById("exercise"+i).scrollIntoView({behavior:"smooth"})}function maybeStartRest(s){if(s>0)startTimer(s)}let timer=null,endTime=null;function startTimer(sec){clearInterval(timer);endTime=Date.now()+sec*1000;tick();timer=setInterval(tick,250)}function tick(){let left=Math.max(0,Math.round((endTime-Date.now())/1000));document.getElementById("timerDisplay").innerText=`${String(Math.floor(left/60)).padStart(2,"0")}:${String(left%60).padStart(2,"0")}`;if(left<=0)clearInterval(timer)}function stopTimer(){clearInterval(timer);document.getElementById("timerDisplay").innerText="00:00"}
-function collectWorkout(){let exercises=[...document.querySelectorAll(".exercise-card")].map((card,ei)=>({name:card.dataset.name,type:card.dataset.type,sets:[...card.querySelectorAll("tbody tr")].map((r,si)=>({label:r.children[0].innerText,weight:val(`e${ei}s${si}w`),reps:val(`e${ei}s${si}r`),done:document.getElementById(`e${ei}s${si}d`).checked}))}));return{profileId:prof().id,date:val("workoutDate")||today(),week:val("weekSelect"),workout:val("workoutSelect"),exercises,notes:val("workoutNotes")}}
-function saveWorkout(){let d=data();d.workouts.push(collectWorkout());save(d);renderMission();renderProgress();alert("Workout saved.")}function finishWorkout(){let d=data(),w=collectWorkout();d.workouts.push(w);w.exercises.forEach(ex=>{if(!["upper","lower"].includes(ex.type))return;let work=ex.sets.filter(s=>s.label!=="Warm-up"),done=work.length&&work.every(s=>s.done),weights=work.map(s=>parseFloat(s.weight)).filter(x=>!isNaN(x));if(done&&weights.length)d.trainingMaxes[w.profileId+"_"+ex.name]=Math.max(...weights)+(ex.type==="upper"?5:10)});save(d);renderMission();renderProgress();alert("Workout saved. Next weights updated.")}
+function collectWorkout(){let exercises=[...document.querySelectorAll(".exercise-card")].map((card,ei)=>({name:card.dataset.name,type:card.dataset.type,rpe:val(`e${ei}rpe`),note:val(`e${ei}note`),sets:[...card.querySelectorAll("tbody tr")].map((r,si)=>({label:r.children[0].innerText,weight:val(`e${ei}s${si}w`),reps:val(`e${ei}s${si}r`),done:document.getElementById(`e${ei}s${si}d`).checked}))}));return{profileId:prof().id,date:val("workoutDate")||today(),week:val("weekSelect"),workout:val("workoutSelect"),exercises,notes:val("workoutNotes")}}
+function workoutKey(w){return `${w.profileId}_${w.date}_${w.week}_${w.workout}`}
+function upsertWorkout(w,status){
+  let d=data(),key=workoutKey(w);
+  w.status=status;
+  w.completed=status==="completed";
+  w.savedAt=new Date().toISOString();
+  let idx=d.workouts.findIndex(x=>workoutKey(x)===key);
+  if(idx>=0)d.workouts[idx]=w;else d.workouts.push(w);
+  save(d);return w;
+}
+function saveWorkout(){
+  upsertWorkout(collectWorkout(),"draft");
+  renderMission();renderProgress();
+  alert("Workout saved. You can continue later.");
+}
+function finishWorkout(){
+  upsertWorkout(collectWorkout(),"completed");
+  renderMission();renderProgress();
+  alert("Workout finished. Weights remain exactly as entered.");
+  showTab("mission");
+}
 function saveDaily(){let carbs=num("carbs"),fiber=num("fiber"),net=Math.max(0,carbs-fiber),sleep=sleepDecimal({sleepHours:val("sleepHours"),sleepMinutes:val("sleepMinutes")}),d=data();d.daily.push({profileId:prof().id,date:val("dailyDate")||today(),weight:val("weight"),waist:val("waist"),calories:val("calories"),protein:val("protein"),carbs:val("carbs"),fiber:val("fiber"),netCarbs:net,fat:val("fat"),steps:val("steps"),water:val("water"),sleepHours:val("sleepHours"),sleepMinutes:val("sleepMinutes"),sleep:sleep.toFixed(2),notes:val("dailyNotes")});save(d);renderMission();renderProgress();alert("Daily saved.")}
 function avg(arr,key){let v=arr.map(x=>parseFloat(x[key])).filter(x=>!isNaN(x));return v.length?(v.reduce((a,b)=>a+b,0)/v.length).toFixed(1):"—"}function renderProgress(){let d=data(),p=prof(),daily=d.daily.filter(x=>x.profileId===p.id),last=daily[daily.length-1]||{},last7=daily.slice(-7),wt=(p.startWeight&&last.weight)?(p.startWeight-parseFloat(last.weight)).toFixed(1):"—",wa=(p.startWaist&&last.waist)?(p.startWaist-parseFloat(last.waist)).toFixed(1):"—";document.getElementById("progressCards").innerHTML=`<div class="stat">Weight Lost<div class="big">${wt}</div></div><div class="stat">Waist Lost<div class="big">${wa}”</div></div><div class="stat">7-Day Steps<div class="big">${avg(last7,"steps")}</div></div><div class="stat">7-Day Sleep<div class="big">${avg(last7,"sleep")}h</div></div><div class="stat">7-Day Protein<div class="big">${avg(last7,"protein")}g</div></div><div class="stat">7-Day Net Carbs<div class="big">${avg(last7,"netCarbs")}g</div></div>`;renderHistory()}
-function renderHistory(){let el=document.getElementById("historyExercise"),ex=el?.value;if(!ex)return;let hist=data().workouts.filter(w=>w.profileId===prof().id).flatMap(w=>w.exercises.map(e=>({...e,date:w.date,workout:w.workout}))).filter(e=>e.name===ex);document.getElementById("history").innerHTML=hist.length?hist.map(h=>`<div class="stat"><b>${h.date}</b> ${h.workout}<br>${h.sets.map(s=>`${s.label}: ${s.weight}x${s.reps}${s.done?" ✓":""}`).join("<br>")}</div>`).join(""):"No history yet."}
-function addProfile(){
-  const d=data(),raw=val("newName").trim(),username=slugifyUsername(raw);
-  if(!username)return alert("Username required.");
-  const opt=id=>{let n=parseFloat(val(id));return isNaN(n)?null:n};
-  const displayName=raw.replace(/^@/,"")||username;
-  d.profiles.push({
-    id:username+"-"+Date.now().toString().slice(-6),
-    username,displayName,name:displayName,
-    startWeight:opt("newStartWeight"),
-    startWaist:opt("newStartWaist"),
-    goalWaist:opt("newGoalWaist")||34
-  });
-  if(!d.activeProfileId)d.activeProfileId=d.profiles[0].id;
-  d.setupComplete=true;
-  save(d);renderProfiles();
-}
-function exportJSON(){download(JSON.stringify(data(),null,2),"mission_ready_v2_5_backup.json","application/json")}function exportCSV(){let d=data(),names=Object.fromEntries(d.profiles.map(p=>[p.id,p.name])),csv="type,profile,date,week,workout,exercise,set,weight,reps,done,waist,bodyweight,calories,protein,carbs,fiber,netCarbs,fat,steps,water,sleepHours,sleepMinutes,sleepDecimal,notes\n";d.daily.forEach(x=>csv+=`daily,"${names[x.profileId]}",${x.date},,,,,,,,,${x.waist},${x.weight},${x.calories},${x.protein},${x.carbs},${x.fiber},${x.netCarbs},${x.fat},${x.steps},${x.water},${x.sleepHours},${x.sleepMinutes},${x.sleep},"${(x.notes||"").replaceAll('"','""')}"\n`);d.workouts.forEach(w=>w.exercises.forEach(e=>e.sets.forEach(s=>csv+=`workout,"${names[w.profileId]}",${w.date},${w.week},"${w.workout}","${e.name}","${s.label}",${s.weight},${s.reps},${s.done},,,,,,,,,,,,,, "${(w.notes||"").replaceAll('"','""')}"\n`)));download(csv,"mission_ready_v2_5_export.csv","text/csv")}
-function download(text,file,type){let blob=new Blob([text],{type}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=file;a.click()}function importJSON(ev){let f=ev.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{localStorage.setItem("missionReadyV25",r.result);init();alert("Imported.")};r.readAsText(f)}function clearData(){if(confirm("Delete all local Mission Ready v2.5 data?")){localStorage.removeItem("missionReadyV25");init()}}init();
+function renderHistory(){let el=document.getElementById("historyExercise"),ex=el?.value;if(!ex)return;let hist=data().workouts.filter(w=>w.profileId===prof().id).flatMap(w=>w.exercises.map(e=>({...e,date:w.date,workout:w.workout}))).filter(e=>e.name===ex);document.getElementById("history").innerHTML=hist.length?hist.map(h=>`<div class="stat"><b>${h.date}</b> ${h.workout}<br>${h.sets.map(s=>`${s.label}: ${s.weight}x${s.reps}${s.done?" ✓":""}`).join("<br>")}${h.rpe?`<br>RPE: ${h.rpe}`:""}${h.note?`<br>Note: ${h.note}`:""}</div>`).join(""):"No history yet."}
+function addProfile(){let d=data(),name=val("newName").trim();if(!name)return alert("Name required.");let opt=id=>{let n=parseFloat(val(id));return isNaN(n)?null:n};d.profiles.push({id:name.toLowerCase().replace(/[^a-z0-9]+/g,"-")+"-"+Date.now().toString().slice(-4),name,startWeight:opt("newStartWeight"),startWaist:opt("newStartWaist"),goalWaist:opt("newGoalWaist")});save(d);renderProfiles()}
+function exportJSON(){download(JSON.stringify(data(),null,2),"mission_ready_v2_6_backup.json","application/json")}function exportCSV(){let d=data(),names=Object.fromEntries(d.profiles.map(p=>[p.id,p.name])),csv="type,profile,date,week,workout,exercise,set,weight,reps,done,waist,bodyweight,calories,protein,carbs,fiber,netCarbs,fat,steps,water,sleepHours,sleepMinutes,sleepDecimal,notes\n";d.daily.forEach(x=>csv+=`daily,"${names[x.profileId]}",${x.date},,,,,,,,,${x.waist},${x.weight},${x.calories},${x.protein},${x.carbs},${x.fiber},${x.netCarbs},${x.fat},${x.steps},${x.water},${x.sleepHours},${x.sleepMinutes},${x.sleep},"${(x.notes||"").replaceAll('"','""')}"\n`);d.workouts.forEach(w=>w.exercises.forEach(e=>e.sets.forEach(s=>csv+=`workout,"${names[w.profileId]}",${w.date},${w.week},"${w.workout}","${e.name}","${s.label}",${s.weight},${s.reps},${s.done},,,,,,,,,,,,,, "${(w.notes||"").replaceAll('"','""')}"\n`)));download(csv,"mission_ready_v2_6_export.csv","text/csv")}
+function download(text,file,type){let blob=new Blob([text],{type}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=file;a.click()}function importJSON(ev){let f=ev.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{localStorage.setItem("missionReadyV26",r.result);init();alert("Imported.")};r.readAsText(f)}function clearData(){if(confirm("Delete all local Mission Ready v2.6 data?")){localStorage.removeItem("missionReadyV26");init()}}init();
