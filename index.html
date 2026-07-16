@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Mission Ready v2.6</title>
+  <title>Mission Ready v2.7</title>
   <link rel="manifest" href="manifest.json"/>
   <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
 <header>
-  <h1>Mission Ready v2.6</h1>
+  <h1>Mission Ready v2.7</h1>
   <p>Train. Track. Improve.</p>
   <nav>
     <button onclick="showTab('mission')">Mission</button>
@@ -17,6 +17,7 @@
     <button onclick="showTab('fuel')">Fuel</button>
     <button onclick="showTab('intel')">Intel</button>
     <button onclick="showTab('library')">Library</button>
+    <button onclick="showTab('diagrams')">Diagrams</button>
     <button onclick="showTab('pfra')">Air Force PFRA</button>
     <button onclick="showTab('admin')">Admin</button>
   </nav>
@@ -114,6 +115,24 @@
     <div id="libraryCard"></div>
   </section>
 
+
+
+  <section id="diagrams" class="tab card hidden">
+    <h2>Diagrams</h2>
+    <p class="hint">Search all exercises or show only today’s workout. Tap a card to enlarge it.</p>
+    <div class="diagram-controls">
+      <input id="diagramSearch" type="search" placeholder="Search exercises..." oninput="renderDiagrams()">
+      <select id="diagramFilter" onchange="renderDiagrams()">
+        <option value="all">All categories</option>
+        <option value="upper">Upper body</option>
+        <option value="lower">Lower body</option>
+        <option value="core">Core</option>
+        <option value="cardio">Cardio</option>
+        <option value="today">Today's workout</option>
+      </select>
+    </div>
+    <div id="diagramGrid" class="diagram-grid"></div>
+  </section>
 
   <section id="pfra" class="tab card hidden">
     <h2>United States Air Force PFRA</h2>

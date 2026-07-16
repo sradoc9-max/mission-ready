@@ -33,3 +33,20 @@
   .pose-label{font-size:.82rem}
   .exercise-rpe{grid-template-columns:1fr}
 }
+
+.exercise-count{font-size:.9rem;font-weight:800;color:#4b5563;margin-bottom:.25rem}
+.diagram-controls{display:grid;grid-template-columns:2fr 1fr;gap:.75rem;margin:.75rem 0 1rem}
+.diagram-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem}
+.diagram-card{background:#fff;border:1px solid #d1d5db;border-radius:14px;padding:.75rem;box-shadow:0 2px 8px rgba(0,0,0,.06);cursor:pointer}
+.diagram-card-header{display:flex;align-items:flex-start;justify-content:space-between;gap:.5rem}
+.diagram-card-header h3{margin:.15rem 0 .35rem}
+.diagram-expand{background:#eef2ff;color:#1d4ed8;border-radius:8px;padding:.35rem .5rem;font-weight:900}
+.diagram-card.expanded{grid-column:1/-1}
+.diagram-card.expanded .pose-panel svg{max-height:520px}
+.diagram-card .exercise-panels{margin-top:.65rem}
+#train .exercise-visual,#train .diagram{display:none!important}
+@media(max-width:650px){
+ .diagram-controls{grid-template-columns:1fr}
+ .diagram-grid{grid-template-columns:1fr}
+ .diagram-card.expanded .exercise-panels{grid-template-columns:1fr}
+}
